@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:io';
 
+import 'package:despesas_pessoais/components/adaptatives/appbar.dart';
 import 'package:despesas_pessoais/components/chart.dart';
 import 'package:despesas_pessoais/components/transaction_form.dart';
 import 'package:despesas_pessoais/models/transaction.dart';
@@ -133,25 +134,12 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     ];
 
-    final PreferredSizeWidget appBar = Platform.isIOS
-        ? CupertinoNavigationBar(
-            middle: Text('Personal Expenses'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: appBarActions,
-            ),
-          )
-        : AppBar(
-            title: Text(
-              'Personal Expenses',
-              style: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontSize: 20 * mediaQuery.textScaleFactor),
-            ),
-            actions: appBarActions);
+    final PreferredSizeWidget _appBar = ApplicationBar(
+      appBarActions: appBarActions,
+    ).build(context);
 
     final availableHeight = mediaQuery.size.height -
-        appBar.preferredSize.height -
+        _appBar.preferredSize.height -
         mediaQuery.padding.top;
 
     final appBody = SafeArea(
@@ -181,11 +169,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Platform.isIOS
         ? CupertinoPageScaffold(
-            navigationBar: appBar,
+            navigationBar: _appBar,
             child: appBody,
           )
         : Scaffold(
-            appBar: appBar,
+            appBar: _appBar,
             body: appBody,
             floatingActionButton: !Platform.isIOS
                 ? FloatingActionButton(

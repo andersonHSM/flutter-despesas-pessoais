@@ -1,6 +1,6 @@
+import 'package:despesas_pessoais/components/transaction_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:intl/intl.dart';
 import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
@@ -11,6 +11,8 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+
     return transactions.isEmpty
         ? LayoutBuilder(builder: (ctx, constraints) {
             return Column(
@@ -42,45 +44,11 @@ class TransactionList extends StatelessWidget {
             itemCount: transactions.length,
             itemBuilder: (ctx, index) {
               final transaction = transactions[index];
-              return Card(
-                elevation: 5,
-                margin: EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 5,
-                ),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 30,
-                    child: Padding(
-                      padding: const EdgeInsets.all(6.0),
-                      child: FittedBox(
-                        child:
-                            Text('R\$ ${transaction.value.toStringAsFixed(2)}'),
-                      ),
-                    ),
-                  ),
-                  title: Text(
-                    transaction.title,
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  subtitle: Text(
-                    DateFormat('d MMM y').format(transaction.date),
-                  ),
-                  trailing: MediaQuery.of(context).size.width > 400
-                      ? FlatButton.icon(
-                          onPressed: () => deleteTransaction(transaction.id),
-                          textColor: Theme.of(context).errorColor,
-                          icon: Icon(
-                            Icons.delete,
-                          ),
-                          label: Text('Excluir'),
-                        )
-                      : IconButton(
-                          color: Theme.of(context).errorColor,
-                          icon: Icon(Icons.delete),
-                          onPressed: () => deleteTransaction(transaction.id),
-                        ),
-                ),
+              return TransactionCard(
+                transaction: transaction,
+                mediaQuery: mediaQuery,
+                deleteTransaction: this.deleteTransaction,
+                key: GlobalKey(debugLabel: transaction.id),
               );
             },
           );
